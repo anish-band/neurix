@@ -4,7 +4,7 @@ import {useState} from "react"
 import { useUser } from "@clerk/nextjs";
 
 export default function Session () {
-  const { user } = useUser();
+  const { user, isLoaded, isSignedIn} = useUser();
   const [session, setSession] = useState({
     name: "",
     category: "",
@@ -28,7 +28,8 @@ export default function Session () {
     }))
   }
 
-  return (
+  if (isSignedIn) {
+    return (
     <form>
       <div className="task-name">
         <label>
@@ -71,4 +72,10 @@ export default function Session () {
       
     </form>
   );
+  }
+
+  return (
+    <p>You need to sign in first</p>
+  );
+  
 }
