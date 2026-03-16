@@ -6,7 +6,12 @@ export default function Home() {
       <main>
         <h1>Neurix</h1>
         <p>A cognitive engine</p>
-        <Link href="/dashboard">Get Started</Link>
+        <div className="session">
+          <Link href="/session">Log Session</Link>
+        </div>
+        <div className="dashboard">
+          <Link href="/dashboard">Get Started</Link>
+        </div>
       </main>
     </div>
   );
