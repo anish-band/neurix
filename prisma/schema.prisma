@@ -16,4 +16,5 @@ model Session {
   rating Int? //out of 10
   startTime DateTime
   endTime DateTime?
+  notes String?
 }
