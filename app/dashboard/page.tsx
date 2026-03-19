@@ -2,25 +2,70 @@
 
 import Link from "next/link"
 import { useUser, SignInButton, UserButton } from "@clerk/nextjs";
+import {useState, useEffect} from "react"
 
 export default function Dashboard() {
-  const {user} = useUser();
+  const {user, isSignedIn} = useUser();
+  const [userData, setUserData] = useState<any[]>([]);
+  
 
-  return (
-  <div>
-    <h1>Dashboard</h1>
-    <Link href="/">Home</Link>
+  useEffect(() => {
+    if (!user) return;
+
+    fetch(`/api/sessions?userId=${user.id}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }).then(response => response.json()).then(data => setUserData(data));
+  }, [user])
+
+  if (!isSignedIn) {
+    return (
       <div>
-        {
-          !user ? (<SignInButton>
-            <button>Log In</button>
-          </SignInButton>) : (
-            <UserButton />
-          )
-        }
+        <h1>Dashboard</h1>
+        <Link href="/">Home</Link>
+          <div>
+            {
+              <SignInButton>
+                <button>Log In</button>
+              </SignInButton>
+            }
+          </div>
       </div>
-  
-  </div>
-  
-  );
+    )
+  } else {
+    let totalTime = 0;
+    let totalRating = 0;
+    let avgRating = 0;
+
+    for (let i = 0; i < userData.length; i++) {
+      totalTime += userData[i].length || 0;
+      totalRating += userData[i].rating || 0;
+    }
+
+    if (userData.length === 0) {
+      avgRating = 0;
+    } else {
+      avgRating = totalRating / userData.length;
+    }
+
+    return(
+      <div>
+        <h1>Hello {user.username}</h1>
+        <UserButton />
+        <h1>Total Sessions: {userData.length}</h1>
+        <h1>Total Time: {totalTime}</h1>
+        <h1>Average Rating: {avgRating.toFixed(1)}</h1>
+        <hr></hr>
+        <div className="user-data">
+          {userData.map((session, index) => (
+          <div key={index}>
+            <p>{session.id}: {session.name} | {session.category} | {session.length}s | Rating: {session.rating}</p>
+          </div>
+          ))}
+        </div>
+      </div>
+      
+      
+    )
+  }
 }
