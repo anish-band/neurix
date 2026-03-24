@@ -55,9 +55,20 @@ export default function Dashboard() {
       dailyData[date] = (dailyData[date] || 0) + (userData[i].length || 0);
     }
 
-    const chartData = Object.entries(dailyData).map(([date, seconds]) => ({
+    const categoryData: { [key:string]: number} = {};
+    for (let i = 0; i < userData.length; i++) {
+      const category = userData[i].category || "unkown";
+      categoryData[category] = (categoryData[category] || 0) + (userData[i].length || 0)
+    }
+
+    const chartDailyData = Object.entries(dailyData).map(([date, seconds]) => ({
       date,
       minutes: Math.round(seconds / 60)
+    }));
+
+    const chartCategoryData = Object.entries(categoryData).map(([category,seconds]) => ({
+      category,
+      minutes: Math.round(seconds/60)
     }));
 
 
@@ -69,12 +80,18 @@ export default function Dashboard() {
         <h1>Total Sessions: {userData.length}</h1>
         <h1>Total Time: {totalTime}</h1>
         <h1>Average Rating: {avgRating.toFixed(1)}</h1>
-        <BarChart width={200} height={200} data={chartData}>
+        <BarChart width={200} height={200} data={chartDailyData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
           <YAxis />
           <Bar dataKey="minutes" fill="#534AB7" />
         </BarChart>
+        <BarChart width={200} height={200} data={chartCategoryData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="category" />
+          <YAxis />
+          <Bar dataKey="minutes" fill="#534AB7" />
+        </BarChart> 
         <hr></hr>
         <div className="user-data">
           {userData.map((session, index) => (

@@ -10,7 +10,7 @@ export default function Home() {
           <Link href="/session">Log Session</Link>
         </div>
         <div className="dashboard">
-          <Link href="/dashboard">Get Started</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </div>
       </main>
     </div>
