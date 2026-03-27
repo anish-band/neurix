@@ -71,6 +71,31 @@ export default function Dashboard() {
       minutes: Math.round(seconds/60)
     }));
 
+    const categoryRankings: { [key: string]: {total: number; count: number}} = {};
+
+    for (let i = 0; i < userData.length; i++) {
+      const category = userData[i].category || "unkown";
+      const rating = userData[i].rating || 0;
+
+      if (!categoryRankings[category]) {
+        categoryRankings[category] = {total: 0, count: 0};
+      }
+
+      categoryRankings[category].total += rating;
+      categoryRankings[category].count += 1;
+    }
+
+    let bestAvg = 0
+    let bestCategory = "";
+
+    for (let category in categoryRankings) {
+      let avg = categoryRankings[category].total / categoryRankings[category].count;
+
+      if (avg > bestAvg) {
+        bestAvg = avg;
+        bestCategory = category;
+      }
+    }
 
     return(
       <div>
@@ -80,6 +105,7 @@ export default function Dashboard() {
         <h1>Total Sessions: {userData.length}</h1>
         <h1>Total Time: {totalTime}</h1>
         <h1>Average Rating: {avgRating.toFixed(1)}</h1>
+        <h2>Your best category is {bestCategory} ({bestAvg} mins avg)</h2>
         <BarChart width={200} height={200} data={chartDailyData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
