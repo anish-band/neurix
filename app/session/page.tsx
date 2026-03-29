@@ -11,6 +11,7 @@ export default function Session() {
 
   const [sessionId, setSessionId] = useState<number | null>(null);
   const [view, setView] = useState("form");
+  const [timerOption, setTimerOption] = useState("");
   const [session, setSession] = useState({
     name: "",
     category: "",
@@ -129,6 +130,18 @@ export default function Session() {
           <div className="space-y-10 text-center">
             {/* Task name */}
             <div className="space-y-3">
+              <label className="text-[#6b6b8a] text-xl">I want a</label>
+              <div className="relative">
+                <button onClick={() => {
+                  setTimerOption("stopwatch");
+                
+                }}>Stopwatch (classic)</button>
+                <button onClick={() => {
+                  setTimerOption("pomodoro");
+                }}>Pomodoro Timer</button>
+              </div>
+            </div>
+            <div className="space-y-3">
               <label className="text-[#6b6b8a] text-xl">I&apos;m going to focus on</label>
               <div className="relative">
                 <input
@@ -205,7 +218,7 @@ export default function Session() {
   }
 
   /* ── Active timer view ──────────────────────────────── */
-  if (view === "active") {
+  if ((view === "active") && (timerOption === "stopwatch")) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center px-4 page-enter">
         {/* Session label */}
